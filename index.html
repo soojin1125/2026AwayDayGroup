@@ -89,7 +89,17 @@
       border-radius: 12px;
     }
 
-    .match h2 {
+    .speaker-match {
+      border-left: 5px solid #9333ea;
+      background: linear-gradient(135deg, #faf5ff, #eef6ff);
+      padding: 22px;
+      margin: 18px 0;
+      border-radius: 14px;
+      box-shadow: 0 3px 12px rgba(147, 51, 234, 0.12);
+    }
+
+    .match h2,
+    .speaker-match h2 {
       margin: 0 0 8px 0;
       font-size: 23px;
       color: #111827;
@@ -103,6 +113,23 @@
       border-radius: 999px;
       font-weight: 700;
       margin: 8px 0 12px 0;
+    }
+
+    .speaker-badge {
+      display: inline-block;
+      background: #9333ea;
+      color: white;
+      padding: 9px 14px;
+      border-radius: 999px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      margin: 8px 0 12px 0;
+    }
+
+    .speaker-note {
+      font-size: 16px;
+      color: #4b5563;
+      margin-top: 8px;
     }
 
     .members-title {
@@ -254,6 +281,12 @@
       { group: 9, name: "Carlos Gratereaux" }
     ];
 
+    const speakers = [
+      { name: "Alessia Basile" },
+      { name: "Lee Curcio" },
+      { name: "Soojin Choe" }
+    ];
+
     function findGroup() {
       const query = document
         .getElementById("search")
@@ -268,20 +301,27 @@
         return;
       }
 
-      const matches = data.filter(person =>
+      const speakerMatches = speakers.filter(person =>
         person.name.toLowerCase().includes(query)
       );
 
-      if (matches.length === 0) {
-        resultDiv.innerHTML = `
-          <div class="no-match">
-            ❌ No match found. Please try another part of your name.
+      const groupMatches = data.filter(person =>
+        person.name.toLowerCase().includes(query)
+      );
+
+      const speakerHtml = speakerMatches.map(match => {
+        return `
+          <div class="speaker-match">
+            <h2>🎤 ${match.name}</h2>
+            <div class="speaker-badge">SPEAKER SQUAD!</div>
+            <div class="speaker-note">
+              You’re part of the speaker team — no table group needed.
+            </div>
           </div>
         `;
-        return;
-      }
+      }).join("");
 
-      resultDiv.innerHTML = matches.map(match => {
+      const groupHtml = groupMatches.map(match => {
         const groupMembers = data
           .filter(person => person.group === match.group)
           .map(person => {
@@ -304,6 +344,17 @@
           </div>
         `;
       }).join("");
+
+      if (speakerMatches.length === 0 && groupMatches.length === 0) {
+        resultDiv.innerHTML = `
+          <div class="no-match">
+            ❌ No match found. Please try another part of your name.
+          </div>
+        `;
+        return;
+      }
+
+      resultDiv.innerHTML = speakerHtml + groupHtml;
     }
 
     document.getElementById("search").addEventListener("keydown", function(event) {
