@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Find Your Group</title>
+
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 24px;
+      color: #1f2933;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: #ffffff;
+      padding: 28px;
+      border-radius: 16px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 30px;
+      color: #111827;
+    }
+
+    .subtitle {
+      color: #4b5563;
+      margin-bottom: 16px;
+    }
+
+    .examples {
+      background: #eef6ff;
+      border-left: 4px solid #0078d4;
+      padding: 10px 14px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+      color: #1f2933;
+    }
+
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 14px;
+      font-size: 18px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #0078d4;
+      box-shadow: 0 0 0 3px rgba(0, 120, 212, 0.15);
+    }
+
+    button {
+      margin-top: 12px;
+      width: 100%;
+      padding: 14px 18px;
+      background: #0078d4;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 17px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #005fa3;
+    }
+
+    #result {
+      margin-top: 22px;
+    }
+
+    .match {
+      border-left: 5px solid #0078d4;
+      background: #f9fafb;
+      padding: 18px;
+      margin: 18px 0;
+      border-radius: 12px;
+    }
+
+    .match h2 {
+      margin: 0 0 8px 0;
+      font-size: 23px;
+      color: #111827;
+    }
+
+    .group-badge {
+      display: inline-block;
+      background: #0078d4;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      margin: 8px 0 12px 0;
+    }
+
+    .members-title {
+      font-weight: 700;
+      margin-top: 12px;
+    }
+
+    ul {
+      margin-top: 8px;
+      padding-left: 22px;
+    }
+
+    li {
+      margin-bottom: 6px;
+      font-size: 16px;
+    }
+
+    .highlight {
+      font-weight: 700;
+      color: #0078d4;
+    }
+
+    .no-match {
+      background: #fff7ed;
+      border-left: 5px solid #f97316;
+      padding: 14px;
+      border-radius: 10px;
+      color: #7c2d12;
+    }
+
+    .footer-note {
+      margin-top: 18px;
+      font-size: 13px;
+      color: #6b7280;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 14px;
+      }
+
+      .card {
+        padding: 22px;
+      }
+
+      h1 {
+        font-size: 26px;
+      }
+
+      input,
+      button {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="card">
+      <h1>🎉 Find Your Group</h1>
+
+      <p class="subtitle">
+        Enter part of your name to find your assigned group.
+      </p>
+
+      <div class="examples">
+        <strong>Examples:</strong> Josh, Chris, Mila
+      </div>
+
+      <input
+        id="search"
+        type="text"
+        placeholder="Type your name and press Enter"
+        autocomplete="off"
+      />
+
+      <button onclick="findGroup()">Search</button>
+
+      <div id="result"></div>
+
+      <div class="footer-note">
+        If you cannot find your group, please speak to the organiser.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const data = [
+      { group: 1, name: "Dan Simpelo" },
+      { group: 1, name: "Amanda Rearick" },
+      { group: 1, name: "Joshua Jones" },
+      { group: 1, name: "Samantha Ferraro" },
+      { group: 1, name: "Nicholas Weicker" },
+      { group: 1, name: "Claudia Zheng" },
+
+      { group: 2, name: "Moeed Faisal" },
+      { group: 2, name: "Zoe Wright" },
+      { group: 2, name: "James Lothian" },
+      { group: 2, name: "Mitch Merberg" },
+      { group: 2, name: "Alejandro Monsech" },
+      { group: 2, name: "Ian Wong" },
+
+      { group: 3, name: "Joshua Friend" },
+      { group: 3, name: "Mark Baxter" },
+      { group: 3, name: "Cameron Vogt" },
+      { group: 3, name: "Max Chiao" },
+      { group: 3, name: "Dom Yarnell" },
+      { group: 3, name: "Mila Ho" },
+
+      { group: 4, name: "Cole Meixner" },
+      { group: 4, name: "Michael Feoli" },
+      { group: 4, name: "Tyler Brey" },
+      { group: 4, name: "Carol Lam" },
+      { group: 4, name: "Terre Goh" },
+      { group: 4, name: "Cherie Dill" },
+
+      { group: 5, name: "Xiaomin Wang" },
+      { group: 5, name: "Atiya Furqan" },
+      { group: 5, name: "Peter Vita" },
+      { group: 5, name: "Lydia Li" },
+      { group: 5, name: "Andres Rosero" },
+
+      { group: 6, name: "John Filippini" },
+      { group: 6, name: "Andrew Switzer" },
+      { group: 6, name: "Serena (Sena) Lee" },
+      { group: 6, name: "Kashaf Noor" },
+      { group: 6, name: "Avraham Akerman" },
+      { group: 6, name: "Alfred Miu" },
+
+      { group: 7, name: "Roland Bongioanni" },
+      { group: 7, name: "Danny Makrides" },
+      { group: 7, name: "Leonardo Cavicchio" },
+      { group: 7, name: "Jacob Edwards" },
+      { group: 7, name: "Jordan Golaszewski" },
+      { group: 7, name: "Chris Flach" },
+
+      { group: 8, name: "Andrew Hancock" },
+      { group: 8, name: "Paul R Roth" },
+      { group: 8, name: "Dovy Goldberg" },
+      { group: 8, name: "Zamira Laverde" },
+      { group: 8, name: "Alejandro Monsech" },
+
+      { group: 9, name: "Shota Okajima" },
+      { group: 9, name: "Samantha Cicerone" },
+      { group: 9, name: "Jaime Mejia-Santos" },
+      { group: 9, name: "Jimmy Tan" },
+      { group: 9, name: "Carlos Gratereaux" }
+    ];
+
+    function findGroup() {
+      const query = document
+        .getElementById("search")
+        .value
+        .toLowerCase()
+        .trim();
+
+      const resultDiv = document.getElementById("result");
+
+      if (!query) {
+        resultDiv.innerHTML = "";
+        return;
+      }
+
+      const matches = data.filter(person =>
+        person.name.toLowerCase().includes(query)
+      );
+
+      if (matches.length === 0) {
+        resultDiv.innerHTML = `
+          <div class="no-match">
+            ❌ No match found. Please try another part of your name.
+          </div>
+        `;
+        return;
+      }
+
+      resultDiv.innerHTML = matches.map(match => {
+        const groupMembers = data
+          .filter(person => person.group === match.group)
+          .map(person => {
+            const isSearchedPerson = person.name === match.name;
+            return `<li class="${isSearchedPerson ? "highlight" : ""}">
+              ${person.name}
+            </li>`;
+          })
+          .join("");
+
+        return `
+          <div class="match">
+            <h2>✅ ${match.name}</h2>
+            <div class="group-badge">Group ${match.group}</div>
+
+            <div class="members-title">Your group members:</div>
+            <ul>
+              ${groupMembers}
+            </ul>
+          </div>
+        `;
+      }).join("");
+    }
+
+    document.getElementById("search").addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        findGroup();
+      }
+    });
+  </script>
+</body>
+</html>
